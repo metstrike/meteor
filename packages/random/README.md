@@ -2,6 +2,8 @@
 [Source code of released version](https://github.com/meteor/meteor/tree/master/packages/random) | [Source code of development version](https://github.com/meteor/meteor/tree/devel/packages/random)
 ***
 
+#### This version is minimally modified to work with NPM in support of the [React Meteor Standalone Mixin](https://www.npmjs.com/package/meteor-standalone-react-mixin) ####
+
 The `random` package provides several functions for generating random
 numbers. It uses a cryptographically strong pseudorandom number generator when
 possible, but falls back to a weaker random number generator when
