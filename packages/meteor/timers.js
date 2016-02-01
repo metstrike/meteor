@@ -1,3 +1,5 @@
+var Meteor = require('../meteor/fiber_stubs_client.js');
+
 var withoutInvocation = function (f) {
   if (Package.ddp) {
     var _CurrentInvocation = Package.ddp.DDP._CurrentInvocation;
@@ -75,3 +77,6 @@ _.extend(Meteor, {
     Meteor._setImmediate(bindAndCatch("defer callback", f));
   }
 });
+
+module.exports = Meteor;
+
