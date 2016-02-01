@@ -2,6 +2,8 @@
 [Source code of released version](https://github.com/meteor/meteor/tree/master/packages/tracker) | [Source code of development version](https://github.com/meteor/meteor/tree/devel/packages/tracker)
 ***
 
+This has been minimally modified from MDG's original to work with NPM in support of the [React Meteor Standalone Mixin](https://www.npmjs.com/package/meteor-standalone-react-mixin)
+
 Meteor Tracker is an incredibly tiny (~1k) but incredibly powerful
 library for **transparent reactive programming** in JavaScript.
 

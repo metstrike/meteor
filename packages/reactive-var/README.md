@@ -2,6 +2,8 @@
 [Source code of released version](https://github.com/meteor/meteor/tree/master/packages/reactive-var) | [Source code of development version](https://github.com/meteor/meteor/tree/devel/packages/reactive-var)
 ***
 
+This package is a minimally modified version of MDG's original.  It is modified to work with npm and require in support of the [React Meteor Standalone Mixin](https://www.npmjs.com/package/meteor-standalone-react-mixin)
+
 This package provide `ReactiveVar`, a general-purpose reactive
 datatype for use with
 [tracker](https://atmospherejs.com/meteor/tracker). `ReactiveVar` is
