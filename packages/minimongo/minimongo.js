@@ -1197,6 +1197,7 @@ module.exports = {
   ReactiveDict: ReactiveDict,
   ReactiveVar: ReactiveVar,
   Tracker: Tracker,
+  MongoID: MongoID,
   EJSON: EJSON
 };
 
