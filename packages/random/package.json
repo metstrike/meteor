@@ -1,6 +1,6 @@
 {
   "name": "meteor-standalone-random",
-  "version": "1.0.67",
+  "version": "1.0.10",
   "description": "NPM standalone version of Meteor group Random package",
   "main": "random-compiled.js",
   "scripts": {
