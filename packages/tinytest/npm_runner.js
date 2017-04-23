@@ -1,5 +1,5 @@
 var _ = require('underscore');
-var Random = require('meteor-standalone-random');
+var Random = require('metstrike-random');
 
 function getNpmRunner(Tinytest){
 var passed = 0;

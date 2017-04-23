@@ -1,5 +1,5 @@
 {
-  "name": "meteor-standalone-base64",
+  "name": "metstrike-base64",
   "version": "1.0.10",
   "description": "Standalone NPM package for Meteor group base64",
   "main": "base64.js",
@@ -8,17 +8,17 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ivanthedeployer/meteor.git"
+    "url": "git+https://github.com/metstrike/meteor.git"
   },
-  "author": "ivanthedeployer",
+  "author": "metstrike",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/ivanthedeployer/meteor/issues"
+    "url": "https://github.com/metstrike/meteor/issues"
   },
-  "homepage": "https://github.com/ivanthedeployer/meteor#readme",
+  "homepage": "https://github.com/metstrike/meteor#readme",
   "devDependencies": {
-    "meteor-standalone-ejson": "*",
-    "meteor-standalone-npm-tinytest": "*",
+    "metstrike-ejson": "*",
+    "metstrike-npm-tinytest": "*",
     "strict-mode": "^0.4.2",
     "underscore": "^1.8.3"
   }

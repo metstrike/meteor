@@ -1,5 +1,5 @@
 var _ = require('underscore');
-var EJSON = require('meteor-standalone-ejson');
+var EJSON = require('metstrike-ejson');
 
 var IdMap = function (idStringify, idParse) {
 

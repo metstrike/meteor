@@ -1,8 +1,8 @@
 var global = Function('return this')();
 var _ = require('underscore');
-var Meteor = require('meteor-standalone-npm-shim');
-var Random = require('meteor-standalone-random');
-var EJSON = require('meteor-standalone-ejson');
+var Meteor = require('metstrike-npm-shim');
+var Random = require('metstrike-random');
+var EJSON = require('metstrike-ejson');
 
 var __meteor_runtime_config__ = {};
 

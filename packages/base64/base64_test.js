@@ -1,7 +1,7 @@
 require('strict-mode')(function () {
 var _ = require('underscore');
-var EJSON = require('meteor-standalone-ejson');
-var Tinytest = require('meteor-standalone-npm-tinytest');
+var EJSON = require('metstrike-ejson');
+var Tinytest = require('metstrike-npm-tinytest');
 var Base64 = require('./base64.js');
 
 

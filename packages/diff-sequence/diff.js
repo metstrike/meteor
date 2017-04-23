@@ -1,5 +1,5 @@
 var _ = require('underscore');
-var EJSON = require('meteor-standalone-ejson');
+var EJSON = require('metstrike-ejson');
 var global = Function('return this')();
 // Patch the meteor object used here
 var Meteor = global.Meteor || {_debug: function(s){console.debug(s);}};

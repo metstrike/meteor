@@ -1,5 +1,5 @@
 var _ = require('underscore');
-var Base64 = require('meteor-standalone-base64');
+var Base64 = require('metstrike-base64');
 var global = Function('return this')();
 var Meteor = global.Meteor || {};
 // This file is a partial analogue to fiber_helpers.js, which allows the client

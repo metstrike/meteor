@@ -1,5 +1,5 @@
-var EJSON = require('meteor-standalone-ejson');
-var Random = require('meteor-standalone-random');
+var EJSON = require('metstrike-ejson');
+var Random = require('metstrike-random');
 var MongoID = {};
 
 

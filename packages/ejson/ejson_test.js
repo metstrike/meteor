@@ -1,7 +1,7 @@
 require('strict-mode')(function () {
 
 
-var Tinytest = require('meteor-standalone-npm-tinytest');
+var Tinytest = require('metstrike-npm-tinytest');
 var EJSON = require('./ejson.js');
 var EJSONTest = EJSON.EJSONTest;
 require('./custom_models_for_tests.js')(EJSON, EJSONTest);

@@ -1,7 +1,7 @@
 require('strict-mode')(function () {
 
 
-var Tinytest = require('meteor-standalone-npm-tinytest');
+var Tinytest = require('metstrike-npm-tinytest');
 var _ = require('underscore');
 
 var gju = require('./geojson-utils.js');

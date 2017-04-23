@@ -1,5 +1,5 @@
 {
-  "name": "meteor-standalone-tracker",
+  "name": "metstrike-tracker",
   "version": "1.1.2",
   "description": "NPM package for Meteor group's Tracker package",
   "main": "tracker.js",
@@ -8,17 +8,17 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ivanthedeployer/meteor.git"
+    "url": "git+https://github.com/metstrike/meteor.git"
   },
-  "author": "ivanthedeployer",
+  "author": "metstrike",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/ivanthedeployer/meteor/issues"
+    "url": "https://github.com/metstrike/meteor/issues"
   },
-  "homepage": "https://github.com/ivanthedeployer/meteor#readme",
+  "homepage": "https://github.com/metstrike/meteor#readme",
   "devDependencies": {
-    "meteor-standalone-npm-shim": "*",
-    "meteor-standalone-npm-tinytest": "*",
+    "metstrike-npm-shim": "*",
+    "metstrike-npm-tinytest": "*",
     "strict-mode": "^0.4.2"
   }
 }

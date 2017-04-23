@@ -1,5 +1,5 @@
 {
-  "name": "meteor-standalone-npm-tinytest",
+  "name": "metstrike-npm-tinytest",
   "version": "1.0.12",
   "description": "Meteor's Tinytest packaged for NPM so other standalone packages can run their regular test suite",
   "main": "tinytest.js",
@@ -8,18 +8,18 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ivanthedeployer/meteor.git"
+    "url": "git+https://github.com/metstrike/meteor.git"
   },
-  "author": "ivanthedeployer",
+  "author": "metstrike",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/ivanthedeployer/meteor/issues"
+    "url": "https://github.com/metstrike/meteor/issues"
   },
-  "homepage": "https://github.com/ivanthedeployer/meteor#readme",
+  "homepage": "https://github.com/metstrike/meteor#readme",
   "dependencies": {
-    "meteor-standalone-ejson": "*",
-    "meteor-standalone-npm-shim": "*",
-    "meteor-standalone-random": "*",
+    "metstrike-ejson": "*",
+    "metstrike-npm-shim": "*",
+    "metstrike-random": "*",
     "underscore": "^1.8.3"
   }
 }

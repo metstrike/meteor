@@ -1,5 +1,5 @@
 {
-  "name": "meteor-standalone-reactive-var",
+  "name": "metstrike-reactive-var",
   "version": "1.0.11",
   "description": "NPM packaging for MDG's reactive-var package",
   "main": "reactive-var.js",
@@ -8,12 +8,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ivanthedeployer/meteor.git"
+    "url": "git+https://github.com/metstrike/meteor.git"
   },
-  "author": "ivanthedeployer",
+  "author": "metstrike",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/ivanthedeployer/meteor/issues"
+    "url": "https://github.com/metstrike/meteor/issues"
   },
-  "homepage": "https://github.com/ivanthedeployer/meteor#readme"
+  "homepage": "https://github.com/metstrike/meteor#readme"
 }

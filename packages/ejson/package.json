@@ -1,5 +1,5 @@
 {
-  "name": "meteor-standalone-ejson",
+  "name": "metstrike-ejson",
   "version": "1.0.13",
   "description": "Standalone EJSON package for NPM ",
   "main": "ejson.js",
@@ -8,21 +8,21 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ivanthedeployer/meteor.git"
+    "url": "git+https://github.com/metstrike/meteor.git"
   },
-  "author": "ivanthedeployer",
+  "author": "metstrike",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/ivanthedeployer/meteor/issues"
+    "url": "https://github.com/metstrike/meteor/issues"
   },
-  "homepage": "https://github.com/ivanthedeployer/meteor#readme",
+  "homepage": "https://github.com/metstrike/meteor#readme",
   "dependencies": {
-    "meteor-standalone-base64": "*",
+    "metstrike-base64": "*",
     "underscore": "^1.8.3"
   },
   "devDependencies": {
-    "meteor-standalone-npm-tinytest": "*",
-    "meteor-standalone-random": "*",
+    "metstrike-npm-tinytest": "*",
+    "metstrike-random": "*",
     "strict-mode": "^0.4.2"
   }
 }

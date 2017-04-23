@@ -1,9 +1,9 @@
 require('strict-mode')(function () {
 
 
-var Tinytest = require('meteor-standalone-npm-tinytest');
+var Tinytest = require('metstrike-npm-tinytest');
 var Tracker = require('./tracker.js');
-var Meteor = require('meteor-standalone-npm-shim');
+var Meteor = require('metstrike-npm-shim');
 var _ = require('underscore');
 Meteor._suppress_log = function(){};
 // Some tests not possible at this point due to package shortages

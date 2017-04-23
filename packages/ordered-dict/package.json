@@ -1,5 +1,5 @@
 {
-  "name": "meteor-standalone-ordered-dict",
+  "name": "metstrike-ordered-dict",
   "version": "1.0.9",
   "description": "NPM packaging for MDG's ordered-dict",
   "main": "ordered_dict.js",
@@ -8,19 +8,19 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ivanthedeployer/meteor.git"
+    "url": "git+https://github.com/metstrike/meteor.git"
   },
-  "author": "ivanthedeployer",
+  "author": "metstrike",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/ivanthedeployer/meteor/issues"
+    "url": "https://github.com/metstrike/meteor/issues"
   },
-  "homepage": "https://github.com/ivanthedeployer/meteor#readme",
+  "homepage": "https://github.com/metstrike/meteor#readme",
   "dependencies": {
     "underscore": "^1.8.3"
   },
   "devDependencies": {
-    "meteor-standalone-npm-tinytest": "*",
+    "metstrike-npm-tinytest": "*",
     "strict-mode": "^0.4.2"
   }
 }

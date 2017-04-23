@@ -1,5 +1,5 @@
 {
-  "name": "meteor-standalone-geojson-utils",
+  "name": "metstrike-geojson-utils",
   "version": "1.0.10",
   "description": "NPM packaging for MDG's geojson-utils",
   "main": "geojson-utils.js",
@@ -8,16 +8,16 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ivanthedeployer/meteor.git"
+    "url": "git+https://github.com/metstrike/meteor.git"
   },
-  "author": "ivanthedeployer",
+  "author": "metstrike",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/ivanthedeployer/meteor/issues"
+    "url": "https://github.com/metstrike/meteor/issues"
   },
-  "homepage": "https://github.com/ivanthedeployer/meteor#readme",
+  "homepage": "https://github.com/metstrike/meteor#readme",
   "devDependencies": {
-    "meteor-standalone-npm-tinytest": "*",
+    "metstrike-npm-tinytest": "*",
     "strict-mode": "^0.4.2",
     "underscore": "^1.8.3"
   }

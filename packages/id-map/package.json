@@ -1,5 +1,5 @@
 {
-  "name": "meteor-standalone-id-map",
+  "name": "metstrike-id-map",
   "version": "1.0.9",
   "description": "NPM package for meteor group's id-map",
   "main": "id-map.js",
@@ -11,16 +11,16 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ivanthedeployer/meteor.git"
+    "url": "git+https://github.com/metstrike/meteor.git"
   },
-  "author": "ivanthedeployer",
+  "author": "metstrike",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/ivanthedeployer/meteor/issues"
+    "url": "https://github.com/metstrike/meteor/issues"
   },
-  "homepage": "https://github.com/ivanthedeployer/meteor#readme",
+  "homepage": "https://github.com/metstrike/meteor#readme",
   "dependencies": {
-    "meteor-standalone-ejson": "*",
+    "metstrike-ejson": "*",
     "underscore": "^1.8.3"
   },
   "devDependencies": {

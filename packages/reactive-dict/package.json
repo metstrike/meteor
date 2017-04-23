@@ -1,5 +1,5 @@
 {
-  "name": "meteor-standalone-reactive-dict",
+  "name": "metstrike-reactive-dict",
   "version": "1.1.18",
   "description": "MDG's reactive-dict packaged for NPM",
   "main": "reactive-dict.js",
@@ -8,18 +8,18 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ivanthedeployer/meteor.git"
+    "url": "git+https://github.com/metstrike/meteor.git"
   },
-  "author": "ivanthedeployer",
+  "author": "metstrike",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/ivanthedeployer/meteor/issues"
+    "url": "https://github.com/metstrike/meteor/issues"
   },
-  "homepage": "https://github.com/ivanthedeployer/meteor#readme",
+  "homepage": "https://github.com/metstrike/meteor#readme",
   "dependencies": {
-    "meteor-standalone-ejson": "*",
-    "meteor-standalone-mongo-id": "*",
-    "meteor-standalone-tracker": "*",
+    "metstrike-ejson": "*",
+    "metstrike-mongo-id": "*",
+    "metstrike-tracker": "*",
     "underscore": "^1.8.3"
   }
 }

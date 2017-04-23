@@ -1,5 +1,5 @@
 {
-  "name": "meteor-standalone-mongo-id",
+  "name": "metstrike-mongo-id",
   "version": "1.0.6",
   "description": "NPM package for meteor group mongo-id package",
   "main": "id.js",
@@ -8,14 +8,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ivanthedeployer/meteor.git"
+    "url": "git+https://github.com/metstrike/meteor.git"
   },
-  "author": "ivanthedeployer",
+  "author": "metstrike",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/ivanthedeployer/meteor/issues"
+    "url": "https://github.com/metstrike/meteor/issues"
   },
-  "homepage": "https://github.com/ivanthedeployer/meteor#readme",
+  "homepage": "https://github.com/metstrike/meteor#readme",
   "devDependencies": {
     "chai": "^3.4.1",
     "mocha": "^2.3.4",
@@ -23,7 +23,7 @@
     "underscore": "^1.8.3"
   },
   "dependencies": {
-    "meteor-standalone-ejson": "*",
-    "meteor-standalone-random": "*"
+    "metstrike-ejson": "*",
+    "metstrike-random": "*"
   }
 }

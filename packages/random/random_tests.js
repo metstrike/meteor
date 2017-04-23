@@ -1,7 +1,7 @@
 require('strict-mode')(function () {
 
 var Random = require('./random-compiled.js');
-var Tinytest = require('meteor-standalone-npm-tinytest');
+var Tinytest = require('metstrike-npm-tinytest');
 var Meteor = {isClient: true};
 
 Tinytest.add('random', function (test) {

@@ -1,4 +1,4 @@
-var Tracker = require('meteor-standalone-tracker');
+var Tracker = require('metstrike-tracker');
 
 /*
  * ## [new] ReactiveVar(initialValue, [equalsFunc])

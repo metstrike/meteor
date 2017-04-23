@@ -1,8 +1,8 @@
 require('strict-mode')(function () {
 
 
-var Tinytest = require('meteor-standalone-npm-tinytest');
-var EJSON = require('meteor-standalone-ejson');
+var Tinytest = require('metstrike-npm-tinytest');
+var EJSON = require('metstrike-ejson');
 var DiffSequence = require('./diff.js');
 var _ = require('underscore');
 

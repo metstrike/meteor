@@ -1,11 +1,11 @@
 var _ = require('underscore');
-var EJSON = require('meteor-standalone-ejson');
+var EJSON = require('metstrike-ejson');
 var Package = {
   mongo: {
-    Mongo: require('meteor-standalone-mongo-id')
+    Mongo: require('metstrike-mongo-id')
   }
 };
-var Tracker = require('meteor-standalone-tracker');
+var Tracker = require('metstrike-tracker');
 
 // XXX come up with a serialization method which canonicalizes object key
 // order, which would allow us to use objects as values for equals.
