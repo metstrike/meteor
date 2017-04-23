@@ -186,9 +186,10 @@ LocalCollection._checkSupportedProjection = function (fields) {
   });
 };
 
+_.extend(global, _globals);
+
 }
 
 if(global.Minimongo && global.LocalCollection){setProjection(global.Minimongo, global.LocalCollection, global);}
 
 module.exports = setProjection;
-

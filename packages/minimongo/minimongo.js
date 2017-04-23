@@ -1181,6 +1181,8 @@ require('./wrap_transform.js')(LocalCollection);  // Needs help with global func
 require('./selector.js')(Minimongo, LocalCollection, MinimongoTest, global);
 require('./sort.js')(Minimongo, LocalCollection);
 require('./selector_modifier.js')(Minimongo, LocalCollection);
+require('./selector_projection.js')(Minimongo, LocalCollection, global);
+require('./sorter_projection.js')(Minimongo, LocalCollection);
 
 require('./projection.js')(Minimongo, LocalCollection, MinimongoError, global);
 require('./modify.js')(Minimongo, LocalCollection, MinimongoError);
@@ -1198,5 +1200,6 @@ module.exports = {
   ReactiveVar: ReactiveVar,
   Tracker: Tracker,
   MongoID: MongoID,
+  MinimongoError: MinimongoError,
   EJSON: EJSON
 };

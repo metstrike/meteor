@@ -11,6 +11,7 @@ var LocalCollection = mm.LocalCollection,
     MongoID = require('metstrike-mongo-id'),
     ReactiveVar = mm.ReactiveVar,
     Tracker = mm.Tracker,
+    MinimongoError = mm.MinimongoError,
     EJSON = require('metstrike-ejson');
 
 // Hack to make LocalCollection generate ObjectIDs by default.
@@ -3387,4 +3388,3 @@ Tinytest.add("minimongo - cannot $rename with null bytes", function (test) {
 Tinytest.runNpm();
 
 });
-

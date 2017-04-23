@@ -1,6 +1,6 @@
 {
   "name": "metstrike-minimongo",
-  "version": "1.0.22",
+  "version": "1.0.22-p1",
   "description": "Standalone version of Meteor group's Minimongo package for NPM",
   "main": "minimongo.js",
   "scripts": {
