@@ -1,5 +1,6 @@
 var global = Function('return this')();
 var _ = require('underscore');
+var Immutable = require('immutable');
 
 // Give a sort spec, which can be in any of these forms:
 //   {"key1": 1, "key2": -1}
@@ -64,6 +65,7 @@ Minimongo.Sorter = function (spec, options) {
     _.each(self._sortSpecParts, function (spec) {
       selector[spec.path] = 1;
     });
+    selector = Immutable.fromJS(selector);
     self._selectorForAffectedByModifier = new Minimongo.Matcher(selector);
   }
 
@@ -425,4 +427,3 @@ var composeComparators = function (comparatorArray) {
 if(global.LocalCollection && global.Minimongo){setSort(Minimongo, LocalCollection);}
 
 module.exports = setSort;
-

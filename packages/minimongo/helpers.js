@@ -1,6 +1,7 @@
 var EJSON = require('metstrike-ejson');
 var global = Function('return this')();
 var _ = require('underscore');
+var Immutable = require('immutable');
 
 function getFns(LocalCollection) {
 
@@ -8,7 +9,7 @@ function getFns(LocalCollection) {
 // arrays.
 // XXX maybe this should be EJSON.isArray
 var isArray = function (x) {
-  return _.isArray(x) && !EJSON.isBinary(x);
+  return Immutable.isIndexed(x);
 };
 
 // XXX maybe this should be EJSON.isObject, though EJSON doesn't know about
@@ -19,7 +20,7 @@ var isPlainObject = LocalCollection._isPlainObject = function (x) {
 };
 
 var isIndexable = function (x) {
-  return isArray(x) || isPlainObject(x);
+  return Immutable.isCollection(x);
 };
 
 // Returns true if this is an object with at least one key and all keys begin
@@ -31,7 +32,7 @@ var isOperatorObject = function (valueSelector, inconsistentOK) {
     return false;
 
   var theseAreOperators = undefined;
-  _.each(valueSelector, function (value, selKey) {
+  valueSelector.forEach(function (value, selKey) {
     var thisIsOperator = selKey.substr(0, 1) === '$';
     if (theseAreOperators === undefined) {
       theseAreOperators = thisIsOperator;
@@ -64,4 +65,3 @@ var fns = {
 if(global.LocalCollection){getFns(global.LocalCollection);}
 
 module.exports = getFns;
-

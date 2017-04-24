@@ -1,5 +1,6 @@
 var global = Function('return this')();
 var _ = require('underscore');
+var Immutable = require('immutable');
 var EJSON = require('metstrike-ejson');
 
 // XXX need a strategy for passing the binding of $ into this
@@ -18,18 +19,19 @@ function setModify(Minimongo, LocalCollection, MinimongoError){
 
 LocalCollection._modify = function (doc, mod, options) {
   options = options || {};
-  if (!isPlainObject(mod))
-    throw MinimongoError("Modifier must be an object");
 
   // Make sure the caller can't mutate our data structures.
-  mod = EJSON.clone(mod);
+  mod = Immutable.fromJS(mod);
+
+  if (!isPlainObject(mod))
+    throw MinimongoError("Modifier must be an object");
 
   var isModifier = isOperatorObject(mod);
 
   var newDoc;
 
   if (!isModifier) {
-    if (mod._id && !EJSON.equals(doc._id, mod._id))
+    if (mod.get('_id') && !Immutable.is(doc.get('_id'), mod.get('_id')))
       throw MinimongoError("Cannot change the _id of a document");
 
     // replace the whole document
@@ -41,16 +43,16 @@ LocalCollection._modify = function (doc, mod, options) {
     newDoc = mod;
   } else {
     // apply modifiers to the doc.
-    newDoc = EJSON.clone(doc);
+    newDoc = doc.asMutable();
 
-    _.each(mod, function (operand, op) {
+    mod.forEach(function (operand, op) {
       var modFunc = MODIFIERS[op];
       // Treat $setOnInsert as $set if this is an insert.
       if (options.isInsert && op === '$setOnInsert')
         modFunc = MODIFIERS['$set'];
       if (!modFunc)
         throw MinimongoError("Invalid modifier specified " + op);
-      _.each(operand, function (arg, keypath) {
+      operand.forEach(function (arg, keypath) {
         if (keypath === '') {
           throw MinimongoError("An empty update path is not valid.");
         }
@@ -80,17 +82,7 @@ LocalCollection._modify = function (doc, mod, options) {
     });
   }
 
-  // move new document into place.
-  _.each(_.keys(doc), function (k) {
-    // Note: this used to be for (var k in doc) however, this does not
-    // work right in Opera. Deleting from a doc while iterating over it
-    // would sometimes cause opera to skip some keys.
-    if (k !== '_id')
-      delete doc[k];
-  });
-  _.each(newDoc, function (v, k) {
-    doc[k] = v;
-  });
+  return newDoc.asImmutable();
 };
 
 // for a.b.c.2.d.e, keyparts should be ['a', 'b', 'c', '2', 'd', 'e'],
@@ -262,7 +254,7 @@ var MODIFIERS = {
       // https://docs.mongodb.com/manual/reference/limits/#Restrictions-on-Field-Names
       throw MinimongoError(`Key ${field} must not contain null bytes`);
     }
-    target[field] = arg;
+    target.set(field, arg);
   },
   $setOnInsert: function (target, field, arg) {
     // converted to `$set` in `_modify`
@@ -515,4 +507,3 @@ var MODIFIERS = {
 if(global.LocalCollection && global.Minimongo){setModify(global.Minimongo, global.LocalCollection, global.MinimongoError);}
 
 module.exports = setModify;
-

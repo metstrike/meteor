@@ -1,5 +1,6 @@
 var global = Function('return this')();
 var _ = require('underscore');
+var Immutable = require('immutable');
 var MongoID = require('metstrike-mongo-id');
 var EJSON = require('metstrike-ejson');
 var GeoJSON = require('metstrike-geojson-utils');
@@ -85,10 +86,10 @@ _.extend(Minimongo.Matcher.prototype, {
 
     // shorthand -- scalars match _id
     if (LocalCollection._selectorIsId(selector)) {
-      self._selector = {_id: selector};
+      self._selector = Immutable.fromJS({_id: selector});
       self._recordPathUsed('_id');
       return function (doc) {
-        return {result: EJSON.equals(doc._id, selector)};
+        return {result: Immutable.is(doc.get("_id"), selector)};
       };
     }
 
@@ -105,7 +106,7 @@ _.extend(Minimongo.Matcher.prototype, {
         EJSON.isBinary(selector))
       throw new Error("Invalid selector: " + selector);
 
-    self._selector = EJSON.clone(selector);
+    self._selector = selector;
     return compileDocumentSelector(selector, self, {isRoot: true});
   },
   _recordPathUsed: function (path) {
@@ -129,7 +130,7 @@ _.extend(Minimongo.Matcher.prototype, {
 var compileDocumentSelector = function (docSelector, matcher, options) {
   options = options || {};
   var docMatchers = [];
-  _.each(docSelector, function (subSelector, key) {
+  docSelector.forEach(function (subSelector, key) {
     if (key.substr(0, 1) === '$') {
       // Outer operators are either logical operators (they recurse back into
       // this function), or $where.
@@ -241,7 +242,6 @@ _exports.regexpElementMatcher = regexpElementMatcher;
 // Takes something that is not an operator object and returns an element matcher
 // for equality with that thing.
 var equalityElementMatcher = function (elementSelector) {
-
   if (isOperatorObject(elementSelector))
     throw Error("Can't create equalityValueSelector for operator object");
 
@@ -980,7 +980,7 @@ var makeLookupFunction = function (key, options) {
       // If we're being asked to do an invalid lookup into an array (non-integer
       // or out-of-bounds), return no results (which is different from returning
       // a single undefined result, in that `null` equality checks won't match).
-      if (!(firstPartIsNumeric && firstPart < doc.length))
+      if (!(firstPartIsNumeric && firstPart < doc.count()))
         return [];
 
       // Remember that we used this array index. Include an 'x' to indicate that
@@ -990,7 +990,7 @@ var makeLookupFunction = function (key, options) {
     }
 
     // Do our first lookup.
-    var firstLevel = doc[firstPart];
+    var firstLevel = doc.get(firstPart);
 
     // If there is no deeper to dig, return what we found.
     //
@@ -1017,7 +1017,7 @@ var makeLookupFunction = function (key, options) {
     // Mongo 2.4, where {'a.0.b': null} stopped matching {a: [5]}). Otherwise,
     // return a single `undefined` (which can, for example, match via equality
     // with `null`).
-    if (!isIndexable(firstLevel)) {
+    if (!isArray(firstLevel)) {
       if (isArray(doc))
         return [];
       return [omitUnnecessaryFields({value: undefined,
@@ -1081,7 +1081,7 @@ var expandArraysInBranches = function (branches, skipTheArrays) {
       });
     }
     if (thisIsArray && !branch.dontIterate) {
-      _.each(branch.value, function (leaf, i) {
+      branch.value.forEach(function (leaf, i) {
         branchesOut.push({
           value: leaf,
           arrayIndices: (branch.arrayIndices || []).concat(i)
@@ -1172,7 +1172,10 @@ LocalCollection._f = {
       return 5;
     if (v instanceof MongoID.ObjectID)
       return 7;
-    return 3; // object
+    if(Immutable.isImmutable(v))
+    	return 3; // Immutable object
+
+    throw Error("expecting immutable type: "+JSON.stringify(v));
 
     // XXX support some/all of these:
     // 14, symbol
@@ -1185,7 +1188,9 @@ LocalCollection._f = {
 
   // deep equality test: use for literal document and array matches
   _equal: function (a, b) {
-    return EJSON.equals(a, b, {keyOrderSensitive: true});
+    var res = Immutable.is(a, b);
+    return res;
+    // return EJSON.equals(a, b, {keyOrderSensitive: true});
   },
 
   // maps a type code to a value that can be used to sort values of
@@ -1267,11 +1272,11 @@ LocalCollection._f = {
     }
     if (ta === 4) { // Array
       for (var i = 0; ; i++) {
-        if (i === a.length)
-          return (i === b.length) ? 0 : -1;
-        if (i === b.length)
+        if (i === a.size())
+          return (i === b.size()) ? 0 : -1;
+        if (i === b.size())
           return 1;
-        var s = LocalCollection._f._cmp(a[i], b[i]);
+        var s = LocalCollection._f._cmp(a.get(i), b.get(i));
         if (s !== 0)
           return s;
       }

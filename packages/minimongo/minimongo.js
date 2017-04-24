@@ -9,6 +9,7 @@
 //var Meteor = require('../meteor/timers.js');
 var global = Function('return this')();
 var _ = require('underscore');
+var Immutable = require('immutable');
 
 var Meteor = require('metstrike-npm-shim');
 
@@ -113,6 +114,8 @@ LocalCollection.prototype.find = function (selector, options) {
   if (arguments.length === 0)
     selector = {};
 
+  selector = Immutable.isImmutable(selector) ? selector : Immutable.fromJS(selector);
+
   return new LocalCollection.Cursor(this, selector, options);
 };
 
@@ -131,7 +134,7 @@ LocalCollection.Cursor = function (collection, selector, options) {
     self._selectorId = selector;
   } else if (LocalCollection._selectorIsIdPerhapsAsObject(selector)) {
     // also do the fast path for { _id: idString }
-    self._selectorId = selector._id;
+    self._selectorId = selector.get('_id');
   } else {
     self._selectorId = undefined;
     if (self.matcher.hasGeoQuery() || options.sort) {
@@ -175,7 +178,7 @@ LocalCollection.prototype.findOne = function (selector, options) {
   options = options || {};
   options.limit = 1;
 
-  return this.find(selector, options).fetch()[0];
+  return this.find(selector, options).fetch().get(0);
 };
 
 /**
@@ -205,7 +208,7 @@ LocalCollection.Cursor.prototype.forEach = function (callback, thisArg) {
       movedBefore: true});
   }
 
-  _.each(objects, function (elt, i) {
+  objects.forEach(function (elt, i) {
     // This doubles as a clone operation.
     elt = self._projectionFn(elt);
 
@@ -247,11 +250,11 @@ LocalCollection.Cursor.prototype.map = function (callback, thisArg) {
  */
 LocalCollection.Cursor.prototype.fetch = function () {
   var self = this;
-  var res = [];
+  var res = new Immutable.List().asMutable();
   self.forEach(function (doc) {
-    res.push(doc);
+    res = res.push(doc);
   });
-  return res;
+  return res.asImmutable();
 };
 
 /**
@@ -269,7 +272,7 @@ LocalCollection.Cursor.prototype.count = function () {
     self._depend({added: true, removed: true},
                  true /* allow the observe to be unordered */);
 
-  return self._getRawObjects({ordered: true}).length;
+  return self._getRawObjectsCount();
 };
 
 LocalCollection.Cursor.prototype._publishCursor = function (sub) {
@@ -483,9 +486,7 @@ LocalCollection.Cursor.prototype._getRawObjects = function (options) {
   var self = this;
   options = options || {};
 
-  // XXX use OrderedDict instead of array, and make IdMap and OrderedDict
-  // compatible
-  var results = options.ordered ? [] : new LocalCollection._IdMap;
+  var results = new LocalCollection._IdMap().asMutable();
 
   // fast path for single ID value
   if (self._selectorId !== undefined) {
@@ -493,16 +494,13 @@ LocalCollection.Cursor.prototype._getRawObjects = function (options) {
     // nothing. This is so it matches the behavior of the '{_id: foo}'
     // path.
     if (self.skip)
-      return results;
+      return results.asImmutable();
 
     var selectedDoc = self.collection._docs.get(self._selectorId);
     if (selectedDoc) {
-      if (options.ordered)
-        results.push(selectedDoc);
-      else
         results.set(self._selectorId, selectedDoc);
     }
-    return results;
+    return results.asImmutable();
   }
 
   // slow path for arbitrary selector, sort, skip, limit
@@ -512,44 +510,88 @@ LocalCollection.Cursor.prototype._getRawObjects = function (options) {
   // this function.
   var distances;
   if (self.matcher.hasGeoQuery() && options.ordered) {
-    if (options.distances) {
-      distances = options.distances;
-      distances.clear();
-    } else {
-      distances = new LocalCollection._IdMap();
-    }
+    distances = new LocalCollection._IdMap().asMutable();
   }
 
   self.collection._docs.forEach(function (doc, id) {
     var matchResult = self.matcher.documentMatches(doc);
     if (matchResult.result) {
       if (options.ordered) {
-        results.push(doc);
-        if (distances && matchResult.distance !== undefined)
-          distances.set(id, matchResult.distance);
-      } else {
-        results.set(id, doc);
+        if (distances && matchResult.distance !== undefined) {
+          distances = distances.set(id, matchResult.distance);
+        }
       }
+      results.set(id, doc);
     }
     // Fast path for limited unsorted queries.
     // XXX 'length' check here seems wrong for ordered
     if (self.limit && !self.skip && !self.sorter &&
-        results.length === self.limit)
+        results.size() === self.limit)
       return false;  // break
     return true;  // continue
   });
 
-  if (!options.ordered)
-    return results;
+  if (options.distances) {
+    options.distances = distances.asImmutable();
+  }
 
-  if (self.sorter) {
+  if (options.ordered && self.sorter) {
     var comparator = self.sorter.getComparator({distances: distances});
     results.sort(comparator);
   }
 
   var idx_start = self.skip || 0;
-  var idx_end = self.limit ? (self.limit + idx_start) : results.length;
-  return results.slice(idx_start, idx_end);
+  var idx_end = self.limit ? (self.limit + idx_start) : results.size();
+  return results.asImmutable().slice(idx_start, idx_end);
+};
+
+LocalCollection.Cursor.prototype._getRawObjectsCount = function (options) {
+  var self = this;
+  options = options || {};
+
+  var resultCount = 0;
+
+  // fast path for single ID value
+  if (self._selectorId !== undefined) {
+    // If you have non-zero skip and ask for a single id, you get
+    // nothing. This is so it matches the behavior of the '{_id: foo}'
+    // path.
+    if (self.skip)
+      return resultCount;
+
+    var selectedDoc = self.collection._docs.get(self._selectorId);
+    if (selectedDoc) {
+        resultCount++;
+    }
+    return resultCount;
+  }
+
+  self.collection._docs.forEach(function (doc, id) {
+    var matchResult = self.matcher.documentMatches(doc);
+    if (matchResult.result) {
+      resultCount++;
+    }
+
+    if (self.limit) {
+      if(self.skip) {
+        if(resultCount >= self.skip+self.limit) {
+          return false;  // break
+        }
+      } else {
+        if(resultCount >= self.limit) {
+          return false;  // break
+        }
+      }
+    }
+
+    return true;  // continue
+  });
+
+  var idx_start = self.skip || 0;
+  var idx_end = self.limit ? (self.limit + idx_start) : resultCount;
+  if(idx_end > resultCount)
+    idx_end = resultCount;
+  return idx_end-idx_start;
 };
 
 // XXX Maybe we need a version of observe that just calls a callback if
@@ -583,7 +625,7 @@ LocalCollection.Cursor.prototype._depend = function (changers, _allow_unordered)
 // this in our handling of null and $exists)
 LocalCollection.prototype.insert = function (doc, callback) {
   var self = this;
-  doc = EJSON.clone(doc);
+  doc = Immutable.isImmutable(doc) ? doc : Immutable.fromJS(doc);
 
   // Make sure field names do not contain Mongo restricted
   // characters ('.', '$', '\0').
@@ -592,7 +634,7 @@ LocalCollection.prototype.insert = function (doc, callback) {
     const invalidCharMsg = {
       '.': "contain '.'",
       '$': "start with '$'",
-      '\0': "contain null bytes",
+      '\0': "contain null bytes"
     };
     JSON.stringify(doc, (key, value) => {
       let match;
@@ -603,13 +645,14 @@ LocalCollection.prototype.insert = function (doc, callback) {
     });
   }
 
-  if (!_.has(doc, '_id')) {
+  if (!doc.has('_id')) {
     // if you really want to use ObjectIDs, set this global.
     // Mongo.Collection specifies its own ids and does not use this code.
-    doc._id = LocalCollection._useOID ? new MongoID.ObjectID()
-                                      : Random.id();
+    doc = doc.set("_id", LocalCollection._useOID ? new MongoID.ObjectID()
+                                      : Random.id());
   }
-  var id = doc._id;
+
+  var id = doc.get("_id");
 
   if (self._docs.has(id))
     throw MinimongoError("Duplicate _id '" + id + "'");
@@ -672,6 +715,8 @@ LocalCollection.prototype._eachPossiblyMatchingDoc = function (selector, f) {
 
 LocalCollection.prototype.remove = function (selector, callback) {
   var self = this;
+
+  selector = Immutable.isImmutable(selector) ? selector : Immutable.fromJS(selector);
 
   // Easy special case: if we're not calling observeChanges callbacks and we're
   // not saving originals and we got asked to remove everything, then just empty
@@ -751,6 +796,8 @@ LocalCollection.prototype.update = function (selector, mod, options, callback) {
     options = null;
   }
   if (!options) options = {};
+
+  selector = Immutable.isImmutable(selector) ? selector : Immutable.fromJS(selector);
 
   var matcher = new Minimongo.Matcher(selector);
 
@@ -836,7 +883,7 @@ LocalCollection.prototype.update = function (selector, mod, options, callback) {
   var insertedId;
   if (updateCount === 0 && options.upsert) {
     var newDoc = LocalCollection._removeDollarOperators(selector);
-    LocalCollection._modify(newDoc, mod, {isInsert: true});
+    newDoc = LocalCollection._modify(newDoc, mod, {isInsert: true});
     if (! newDoc._id && options.insertedId)
       newDoc._id = options.insertedId;
     insertedId = self.insert(newDoc);
@@ -893,13 +940,15 @@ LocalCollection.prototype._modifyAndNotify = function (
     } else {
       // Because we don't support skip or limit (yet) in unordered queries, we
       // can just do a direct lookup.
-      matched_before[qid] = query.results.has(doc._id);
+      matched_before[qid] = query.results.has(doc.get('_id'));
     }
   }
 
-  var old_doc = EJSON.clone(doc);
+  var old_doc = doc;
 
-  LocalCollection._modify(doc, mod, {arrayIndices: arrayIndices});
+  var new_doc = LocalCollection._modify(doc, mod, {arrayIndices: arrayIndices});
+
+  self._docs.set(new_doc.get('_id'), new_doc);
 
   for (qid in self.queries) {
     query = self.queries[qid];

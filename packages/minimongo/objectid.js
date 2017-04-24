@@ -15,8 +15,8 @@ LocalCollection._selectorIsId = function (selector) {
 LocalCollection._selectorIsIdPerhapsAsObject = function (selector) {
   return LocalCollection._selectorIsId(selector) ||
     (selector && typeof selector === "object" &&
-     selector._id && LocalCollection._selectorIsId(selector._id) &&
-     _.size(selector) === 1);
+     selector.get('_id') && LocalCollection._selectorIsId(selector.get('_id')) &&
+     selector.count() === 1);
 };
 
 // If this is a selector which explicitly constrains the match by ID to a finite
@@ -32,16 +32,17 @@ LocalCollection._idsMatchedBySelector = function (selector) {
     return null;
 
   // Do we have an _id clause?
-  if (_.has(selector, '_id')) {
+  if (selector.has('_id')) {
     // Is the _id clause just an ID?
-    if (LocalCollection._selectorIsId(selector._id))
-      return [selector._id];
+    if (LocalCollection._selectorIsId(selector.get('_id')))
+      return [selector.get('_id')];
     // Is the _id clause {_id: {$in: ["x", "y", "z"]}}?
-    if (selector._id && selector._id.$in
-        && _.isArray(selector._id.$in)
-        && !_.isEmpty(selector._id.$in)
-        && _.all(selector._id.$in, LocalCollection._selectorIsId)) {
-      return selector._id.$in;
+    var din = selector.get('_id') && selector.get('_id').get('$in');
+    if (selector.get('_id') && din
+        && isArray(din)
+        && din.count() > 0
+        && din.forEach(LocalCollection._selectorIsId) == din.count()) {
+      return din;
     }
     return null;
   }
@@ -65,5 +66,3 @@ LocalCollection._idsMatchedBySelector = function (selector) {
 if(global.LocalCollection){setObjectId(global.LocalCollection);}
 
 module.exports = setObjectId;
-
-

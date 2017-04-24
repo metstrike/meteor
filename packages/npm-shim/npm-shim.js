@@ -8,7 +8,7 @@ var _ = require('underscore');
 var Meteor = global.Meteor || {};
 var Package = global.Package || {};
 // Hacky patch
-Meteor._debug = function(s){console.debug(s);};
+Meteor._debug = function(s){console.log(s);};
 
 // This file is a partial analogue to fiber_helpers.js, which allows the client
 // to use a queue too, and also to call noYieldsAllowed.

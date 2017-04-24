@@ -21,22 +21,23 @@ LocalCollection._compileProjection = function (fields) {
   // returns transformed doc according to ruleTree
   var transform = function (doc, ruleTree) {
     // Special case for "sets"
-    if (_.isArray(doc))
-      return _.map(doc, function (subdoc) { return transform(subdoc, ruleTree); });
+    if (isArray(doc))
+      return doc.map(function (subdoc) { return transform(subdoc, ruleTree); });
 
-    var res = details.including ? {} : EJSON.clone(doc);
+    var res = details.including ? {} : doc;
     _.each(ruleTree, function (rule, key) {
-      if (!_.has(doc, key))
+      if (!doc.has(key))
         return;
       if (_.isObject(rule)) {
         // For sub-objects/subsets we branch
-        if (_.isObject(doc[key]))
-          res[key] = transform(doc[key], rule);
+    	let val=doc.get(key);
+        if (isObject(val))
+          res = res.set(key, transform(val, rule));
         // Otherwise we don't even touch this subfield
       } else if (details.including)
-        res[key] = EJSON.clone(doc[key]);
+        res = res.set(key, doc.get(key));
       else
-        delete res[key];
+        res = res.remove(key);
     });
 
     return res;
@@ -45,10 +46,10 @@ LocalCollection._compileProjection = function (fields) {
   return function (obj) {
     var res = transform(obj, details.tree);
 
-    if (_idProjection && _.has(obj, '_id'))
-      res._id = obj._id;
-    if (!_idProjection && _.has(res, '_id'))
-      delete res._id;
+    if (_idProjection && obj.has('_id'))
+      res = res.set('_id', obj.get('_id'));
+    if (!_idProjection && res.has('_id'))
+      res = res.remove('_id');
     return res;
   };
 };
